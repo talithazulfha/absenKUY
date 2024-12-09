@@ -1,7 +1,9 @@
 package com.example.absenkuy.ui.home
 
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,10 +32,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.absenkuy.R
 
+
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -50,17 +55,22 @@ fun HomeScreen() {
         // Header
         HeaderSection()
 
+
         Spacer(modifier = Modifier.height(16.dp))
+
 
         // Profile Card
         ProfileCard()
 
+
         Spacer(modifier = Modifier.height(32.dp))
 
+
         // Menu Grid
-        MenuGrid()
+        MenuGrid(navController)
     }
 }
+
 
 @Composable
 fun HeaderSection() {
@@ -84,6 +94,7 @@ fun HeaderSection() {
         )
     }
 }
+
 
 @Composable
 fun ProfileCard() {
@@ -110,7 +121,9 @@ fun ProfileCard() {
                 )
             }
 
+
             Spacer(modifier = Modifier.width(16.dp))
+
 
             Column {
                 Text(
@@ -125,7 +138,9 @@ fun ProfileCard() {
                 )
             }
 
+
             Spacer(modifier = Modifier.weight(1f))
+
 
             Icon(
                 painter = painterResource(id = R.drawable.ic_edit_password),
@@ -136,8 +151,9 @@ fun ProfileCard() {
     }
 }
 
+
 @Composable
-fun MenuGrid() {
+fun MenuGrid(navController: NavHostController) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth()
@@ -148,15 +164,23 @@ fun MenuGrid() {
         ) {
             MenuCard(
                 icon = R.drawable.ic_absensi,
-                label = "Absensi"
+                label = "Absensi",
+                onClick = {
+                    navController.navigate("matkul")
+                }
             )
             MenuCard(
                 icon = R.drawable.ic_rekap_kehadiran,
-                label = "Rekap Kehadiran"
+                label = "Rekap Kehadiran",
+                onClick = {
+                    navController.navigate("rekap_kehadiran")
+                }
             )
         }
 
+
         Spacer(modifier = Modifier.height(16.dp))
+
 
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
@@ -164,21 +188,29 @@ fun MenuGrid() {
         ) {
             MenuCard(
                 icon = R.drawable.ic_feedback,
-                label = "Feedback Perkuliahan"
+                label = "Feedback Perkuliahan",
+                onClick = {
+                    navController.navigate("feedback_perkuliahan")
+                }
             )
             MenuCard(
                 icon = R.drawable.ic_edit_password,
-                label = "Edit Password"
+                label = "Edit Password",
+                onClick = {
+                    navController.navigate("edit_password")
+                }
             )
         }
     }
 }
 
+
 @Composable
-fun MenuCard(icon: Int, label: String) {
+fun MenuCard(icon: Int, label: String, onClick: () -> Unit) {
     Card(
         modifier = Modifier
-            .size(120.dp),
+            .size(120.dp)
+            .clickable { onClick() },
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -203,8 +235,10 @@ fun MenuCard(icon: Int, label: String) {
     }
 }
 
+
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen()
+    HomeScreen(navController = rememberNavController())
 }
+

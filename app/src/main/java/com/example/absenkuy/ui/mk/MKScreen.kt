@@ -1,5 +1,6 @@
 package com.example.absenkuy.ui.mk
 
+
 import android.annotation.SuppressLint
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
@@ -27,11 +28,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MKScreen() {
+fun MKScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -39,9 +43,8 @@ fun MKScreen() {
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color(0xFF1565C0),
                     titleContentColor = Color.White
-                ),
-
                 )
+            )
         },
         content = {
             MKList(
@@ -53,36 +56,45 @@ fun MKScreen() {
                     "Manajemen Hubungan Pelanggan",
                     "E-Commerce",
                     "Perancangan Sistem Enterprise"
-                )
+                ),
+                navController = navController // Lanjutkan navController ke MKList
             )
         }
     )
 }
 
+
 @Composable
-fun MKList(mkList: List<String>) {
+fun MKList(mkList: List<String>, navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
-            .padding(top = 64.dp),
+            .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         mkList.forEach { mk ->
-            MKItem(mk)
+            MKItem(
+                mkName = mk,
+                navController = navController,
+                onClick = { action ->
+                    when (action) {
+                        "presensi" -> navController.navigate("presensi")
+                        "izin" -> navController.navigate("izin")
+                    }
+                }
+            )
         }
     }
 }
 
-@Composable
-fun MKItem(mkName: String) {
-    var isExpanded by remember { mutableStateOf(false) }
 
+@Composable
+fun MKItem(mkName: String, navController: NavHostController, onClick: (String) -> Unit) {
+    var isExpanded by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .animateContentSize()
-
     ) {
         Column(
             modifier = Modifier
@@ -97,18 +109,31 @@ fun MKItem(mkName: String) {
             )
             if (isExpanded) {
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Detail for $mkName",
-                    fontSize = 14.sp,
-                    color = Color.Gray
-                )
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text(
+                        text = "Ambil Presensi",
+                        fontSize = 14.sp,
+                        color = Color(0xFF1565C0),
+                        modifier = Modifier.clickable { onClick("presensi") }
+                    )
+                    Text(
+                        text = "Permohonan Izin",
+                        fontSize = 14.sp,
+                        color = Color(0xFF1565C0),
+                        modifier = Modifier.clickable { onClick("izin") }
+                    )
+                }
             }
         }
     }
 }
 
+
 @Preview
 @Composable
 fun MKScreenPreview() {
-    MKScreen()
+    MKScreen(navController = rememberNavController())
 }
+
+
+
